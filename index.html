@@ -7,7 +7,26 @@
     <title>ts-todo</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="container">
+      <h1>Todo App</h1>
+      <div class = progressBarWrapper>
+      <div class = progressBar></div>
+      </div>
+      <div class = topButtons>
+      <button id="removeDoneBtn">remove completed tasks</button>
+      <button id="filterDoneBtn">filter tasks</button>
+      </div>
+      <form class="todo-form">
+        <input type="text" id="todo-input" placeholder="Add a new todo" />
+        <input type="date" id="dueDateInput" onkeydown="return false;">
+        <button type="submit">Add</button>
+      </form>
+      <!-- error handling message : CSS added:: .input-error & #error-message -->
+      <p id="error-message">fill out ALL fields</p>
+      <ul class="todo-list" id="todo-list"></ul>
+
+      <input type="color" id="colorPicker" />
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
