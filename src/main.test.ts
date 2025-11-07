@@ -13,8 +13,7 @@ let todos: Todo[] = [];
 // --- Mock removeTodo function ---
 let removeTodo: (id: number) => void;
 
-// --- Button element ---
-let removeDoneBtn: HTMLButtonElement;
+
 
 // --- Function under test ---
 function removeCompletedTodos(): void {
@@ -103,7 +102,7 @@ describe('removeCompletedTodos', () => {
   beforeEach(() => {
     // Set up a fake DOM button
     document.body.innerHTML = `<button id="removeDoneBtn"></button>`;
-    removeDoneBtn = document.getElementById('removeDoneBtn') as HTMLButtonElement;
+    document.getElementById('removeDoneBtn') as HTMLButtonElement;
 
     // Create fake todos
     todos = [
