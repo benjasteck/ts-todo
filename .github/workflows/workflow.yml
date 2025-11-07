@@ -43,7 +43,7 @@ jobs:
         run: npm run dev &
 
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:5173
+        run: npx wait-on http://localhost:5173/todo/
 
       - name: Run tests
         run: testcafe chromium:headless  src/tests/*
