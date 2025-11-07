@@ -1,7 +1,7 @@
 import { Selector } from 'testcafe';
 
 fixture('Todo App')
-  .page('http://localhost:5173'); // adjust if your local dev URL differs
+  .page('https://test.bsteckmetz.dk/todo/'); // adjust if your local dev URL differs
 
 test('User can add a todo only when all fields are filled', async t => {
   const todoInput = Selector('#todo-input');

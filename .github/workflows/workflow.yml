@@ -39,11 +39,31 @@ jobs:
       - name: Install Chromium
         run: apt-get install -y chromium
 
-      - name: Start dev server
-        run: npm run dev &
-
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:5173/
-
       - name: Run tests
         run: testcafe chromium:headless  src/tests/*
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/
+
+  deployment:
+    needs: integration-delivery
+    runs-on: ubuntu-latest
+    environment: Live
+    steps:
+      - name: Load artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist/
+
+      - name: FTP deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
+        with:
+          server: ${{vars.FTP_SERVER}}
+          username: ${{secrets.FTP_USERNAME}}
+          password: ${{secrets.FTP_PASSWORD}}
+          server-dir: live/todo/
+          local-dir: dist/

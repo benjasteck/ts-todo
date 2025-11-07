@@ -1,7 +1,7 @@
 import { Selector } from 'testcafe';
 
 fixture('Todo App - Add & Edit Todo')
-  .page('http://localhost:5173');
+  .page('https://test.bsteckmetz.dk/todo/');
 
 test('Add a todo and then edit it', async t => {
   const todoInput = Selector('#todo-input');
