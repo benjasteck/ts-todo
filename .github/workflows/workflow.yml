@@ -31,7 +31,7 @@ jobs:
           local-dir: dist/
 
       - name: Install Testcafe
-        run: npm instal -g testcafe
+        run: npm install -g testcafe
 
       - name: Update APT
         run: apt-get update
