@@ -40,7 +40,7 @@ jobs:
         run: apt-get install -y chromium
 
       - name: Run tests
-        run: npx testcafe "chromium:headless --ignore-certificate-errors" src/tests/* --page-request-timeout 10000 --retry-test-pages
+        run: npx testcafe "chromium:headless --ignore-certificate-errors" src/tests/* --page-request-timeout 10000
 
       - name: Store artifacts
         uses: actions/upload-artifact@v4
