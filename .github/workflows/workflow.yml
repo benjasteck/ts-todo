@@ -31,7 +31,7 @@ jobs:
           server: ${{vars.FTP_SERVER}}
           username: ${{secrets.FTP_USERNAME}}
           password: ${{secrets.FTP_PASSWORD}}
-          server-dir: test.bsteckmetz.dk/todo/
+          server-dir: test/todo/
           local-dir: dist/
 
       - name: Install Testcafe
@@ -81,5 +81,5 @@ jobs:
           server: ${{vars.FTP_SERVER}}
           username: ${{secrets.FTP_USERNAME}}
           password: ${{secrets.FTP_PASSWORD}}
-          server-dir: test.bsteckmetz.dk/todo/
+          server-dir: live/todo/
           local-dir: dist/
