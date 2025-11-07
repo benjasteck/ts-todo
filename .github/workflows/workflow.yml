@@ -39,5 +39,11 @@ jobs:
       - name: Install Chromium
         run: apt-get install -y chromium
 
+      - name: Start dev server
+        run: npm run dev &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:5173
+
       - name: Run tests
         run: testcafe chromium:headless  src/tests/*
