@@ -37,7 +37,7 @@ jobs:
         run: apt-get update
 
       - name: Install Chromium
-        run: apt-get instal -y chromium
+        run: apt-get install -y chromium
 
       - name: Run tests
         run: testcafe chromium:headless  tests/*
