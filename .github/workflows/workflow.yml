@@ -15,8 +15,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm Install
+      - name: Instal dependencies
+        run: npm Instal
 
       - name: Build website
         run: npm run build
@@ -31,7 +31,7 @@ jobs:
           local-dir: dist/
 
       - name: Install Testcafe
-        run: npm install -g testcafe
+        run: npm instal -g testcafe
 
       - name: Update APT
         run: apt-get update
