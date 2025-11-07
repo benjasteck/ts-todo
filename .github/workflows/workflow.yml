@@ -21,6 +21,10 @@ jobs:
       - name: Build website
         run: npm run build
 
+      - name: Debug 'dist' directory contents 🔎
+        # This command lists all files and folders recursively inside 'dist/'
+        run: ls -R dist/
+
       - name: FTP delivery
         uses: SamKirkland/FTP-Deploy-Action@v4.3.3
         with:
