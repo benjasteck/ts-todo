@@ -49,7 +49,7 @@ jobs:
           ls -a ..
 
       - name: Run TestCafe E2E Tests
-        run: npx testcafe "chromium:headless --no-sandbox --disable-dev-shm-usage --disable-gpu --ignore-certificate-errors" src/tests/* --page-request-timeout 20000 --concurrency 1 --browser-init-timeout 30000 --test-execution-timeout 180000 --skip-js-errors --host 0.0.0.0
+        run: npx testcafe "chromium:headless --no-sandbox --disable-dev-shm-usage --disable-gpu --ignore-certificate-errors" src/tests/* --page-request-timeout 20000 --concurrency 1 --browser-init-timeout 30000 --test-execution-timeout 180000 --skip-js-errors --host 0.0.0.0 #ihateyml
 
       - name: Store artifacts
         uses: actions/upload-artifact@v4
