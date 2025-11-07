@@ -40,7 +40,7 @@ jobs:
         run: apt-get install -y chromium
 
       - name: Run tests
-        run: npx testcafe "chromium:headless --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --ignore-certificate-errors" src/tests/* --page-request-timeout 20000
+        run: testcafe "chromium:headless tests/*
 
       - name: Store artifacts
         uses: actions/upload-artifact@v4
