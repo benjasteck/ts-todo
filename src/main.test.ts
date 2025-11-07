@@ -1,26 +1,67 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+// --- Todo interface ---
 interface Todo {
   id: number;
   title: string;
   completed: boolean;
 }
 
-// Global variable for the first test suite, but it's okay because
-// it's immediately reset in the beforeEach
+// --- Global todos array ---
 let todos: Todo[] = [];
 
-describe('Todo App - Basic Logic', () => {
+// --- Mock removeTodo function ---
+let removeTodo: (id: number) => void;
+
+// --- Button element ---
+let removeDoneBtn: HTMLButtonElement;
+
+// --- Function under test ---
+function removeCompletedTodos(): void {
+  const completedTodos = todos.filter(todo => todo.completed);
+  completedTodos.forEach(todo => removeTodo(todo.id));
+}
+
+const localStorageMock = {
+  setItem: vi.fn(),
+  getItem: vi.fn(),
+  clear: vi.fn(),
+};
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});
+
+// --- Helper to save todos ---
+function saveTodosToLocalStorage() {
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+const renderTodos = vi.fn();
+
+// --- Function under test ---
+function filterTodos(): void {
+  todos.sort((a, b) => Number(a.completed) - Number(b.completed));
+
+  renderTodos();
+}
+
+// --- Basic Todo tests ---
+describe('Todo App', () => {
   beforeEach(() => {
-    // Reset state before EACH test in this suite
     todos = [];
+    vi.clearAllMocks();
   });
 
   it('should add a new todo', () => {
     const newTodo: Todo = { id: 1, title: 'Test Todo', completed: false };
     todos.push(newTodo);
+     saveTodosToLocalStorage();
+
+    // Assertions
     expect(todos.length).toBe(1);
     expect(todos[0]).toEqual(newTodo);
+    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+    expect(localStorage.setItem).toHaveBeenCalledWith('todos', JSON.stringify(todos));
   });
 
   it('should mark a todo as completed', () => {
@@ -34,55 +75,113 @@ describe('Todo App - Basic Logic', () => {
     const newTodo: Todo = { id: 1, title: 'Test Todo', completed: false };
     todos.push(newTodo);
     todos = todos.filter(todo => todo.id !== newTodo.id);
+    saveTodosToLocalStorage();
     expect(todos.length).toBe(0);
+    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+    expect(localStorage.setItem).toHaveBeenCalledWith('todos', JSON.stringify(todos));
   });
+
+  it('should store todos in localStorage', () => {
+  const newTodo: Todo = { id: 1, title: 'Test Todo', completed: false };
+  todos.push(newTodo);
+
+  // Use a real localStorage mock
+  localStorage.setItem = vi.fn((key, value) => {
+    (localStorage as any)[key] = value;
+  });
+  localStorage.getItem = vi.fn((key) => (localStorage as any)[key]);
+
+  saveTodosToLocalStorage();
+
+  const saved = JSON.parse(localStorage.getItem('todos')!);
+  expect(saved).toEqual(todos);
+});
 });
 
-// The check for 'document' is a good sanity check
-it('Environment Check: JSDOM should provide the document object', () => {
-  expect(typeof document).toBe('object');
-});
-
-// --- Second Test Suite (Where the failures likely are) ---
-describe("removeCompletedTodos - Integration Test", () => {
-  // Declare variables for THIS suite
-  let todos: Todo[];
-  let removeTodo: (id: number) => void;
-
-  // This function is now local to the test suite, preventing global leakage
-  function removeCompletedTodos(): void {
-    const completedTodos = todos.filter(todo => todo.completed);
-    // Crucial: Use the removeTodo function that will be defined in beforeEach
-    completedTodos.forEach(todo => removeTodo(todo.id));
-  }
-
+// --- removeCompletedTodos tests ---
+describe('removeCompletedTodos', () => {
   beforeEach(() => {
-    // 1. Reset/Initialize local suite variables
+    // Set up a fake DOM button
+    document.body.innerHTML = `<button id="removeDoneBtn"></button>`;
+    removeDoneBtn = document.getElementById('removeDoneBtn') as HTMLButtonElement;
+
+    // Create fake todos
     todos = [
-      { id: 1, title: "done", completed: true },
-      { id: 2, title: "not done", completed: false },
-      { id: 3, title: "also done", completed: true },
+      { id: 1, title: 'done', completed: true },
+      { id: 2, title: 'not done', completed: false },
+      { id: 3, title: 'also done', completed: true },
     ];
 
-    // 2. Initialize the mock function
+    // Mock removeTodo function
     removeTodo = vi.fn();
-
-    // 3. Clear the DOM, preventing leakage from other files/tests
-    document.body.innerHTML = '';
-
-    // If you need the button for a specific test, declare it in that test.
-    // You don't seem to be using the button in the 'it' block, so I'll remove it
-    // from the beforeEach for clarity/isolation.
   });
 
-  it("should call removeTodo for each completed todo", () => {
-    // ACT
+  it('should call removeTodo for each completed todo', () => {
     removeCompletedTodos();
 
-    // ASSERT
     // removeTodo should be called twice — for todos 1 and 3
     expect(removeTodo).toHaveBeenCalledTimes(2);
     expect(removeTodo).toHaveBeenCalledWith(1);
     expect(removeTodo).toHaveBeenCalledWith(3);
   });
 });
+
+describe('filterTodos', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    todos = [
+      { id: 1, title: 'done', completed: true },
+      { id: 2, title: 'not done', completed: false },
+      { id: 3, title: 'done again', completed: true },
+      { id: 4, title: 'still not done', completed: false },
+    ];
+  });
+
+  it('should sort todos so incomplete come first', () => {
+    filterTodos();
+
+    const completedStatuses = todos.map(t => t.completed);
+    // Incomplete (false) should appear before complete (true)
+    expect(completedStatuses).toEqual([false, false, true, true]);
+  });
+});
+
+
+describe('Todo DOM interactions', () => {
+  beforeEach(() => {
+    // Set up fake DOM for each test
+    document.body.innerHTML = `
+      <div id="app">
+        <div class="container">
+          <h1>Todo App</h1>
+          <div class="progressBarWrapper">
+            <div class="progressBar"></div>
+          </div>
+          <div class="topButtons">
+            <button id="removeDoneBtn">remove completed tasks</button>
+            <button id="filterDoneBtn">filter tasks</button>
+          </div>
+          <form class="todo-form">
+            <input type="text" id="todo-input" placeholder="Add a new todo" />
+            <input type="date" id="dueDateInput" onkeydown="return false;">
+            <button type="submit">Add</button>
+          </form>
+          <p id="error-message">fill out ALL fields</p>
+          <ul class="todo-list" id="todo-list"></ul>
+          <input type="color" id="colorPicker" />
+        </div>
+      </div>
+    `;
+  });
+
+  it('should render a todo in the list', () => {
+    const list = document.getElementById('todo-list')!;
+    const todoItem = document.createElement('li');
+    todoItem.textContent = 'Buy milk';
+    list.appendChild(todoItem);
+
+    expect(list.children.length).toBe(1);
+    expect(list.textContent).toContain('Buy milk');
+  });
+});
+
