@@ -40,4 +40,4 @@ jobs:
         run: apt-get install -y chromium
 
       - name: Run tests
-        run: testcafe chromium:headless  tests/*
+        run: testcafe chromium:headless  src/tests/*
