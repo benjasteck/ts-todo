@@ -22,7 +22,7 @@ jobs:
         run: npm run build
 
       - name: FTP delivery
-        uses: SamKirkland/FTP-DeployAction@4.3.3
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
         with:
           server: ${{vars.FTP_SERVER}}
           username: ${{vars.FTP_USERNAME}}
