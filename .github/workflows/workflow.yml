@@ -49,7 +49,7 @@ jobs:
           ls -a ..
 
       - name: Run TestCafe E2E Tests
-        run: testcafe chromium:headless $PWD/src/tests/todo-edit.js --ignore-ssl-errors
+        run: testcafe chromium:headless $PWD/src/tests/todo-edit.js --ignore-ssl-errors #har opdateret ssl pls virk
 
       - name: Store artifacts
         uses: actions/upload-artifact@v4
