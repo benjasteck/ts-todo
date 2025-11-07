@@ -48,6 +48,9 @@ jobs:
           echo "--- Files UP ONE directory (parent) ---"
           ls -a ..
 
+      - name: Check Target Server Availability
+        run: curl -I -s -L https://test.bsteckmetz.dk/todo/
+
       - name: Run TestCafe E2E Tests
         run: testcafe chromium:headless src/tests/todo-tests.js
 
