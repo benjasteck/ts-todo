@@ -20,3 +20,24 @@ jobs:
 
       - name: Build website
         run: npm run build
+
+      - name: FTP delivery
+        uses: SamKirkland/FTP-DeployAction@4.3.3
+        with:
+          server: ${{vars.FTP_SERVER}}
+          username: ${{vars.FTP_USERNAME}}
+          password: ${{vars.FTP_PASSWORD}}
+          server-dir: test/todo/
+          local-dir: dist/
+
+      - name: Install Testcafe
+        run: npm install -g testcafe
+
+      - name: Update APT
+        run: apt-get update
+
+      - name: Install Chromium
+        run: apt-get instal -y chromium
+
+      - name: Run tests
+        run: testcafe chromium:headless  tests/*
