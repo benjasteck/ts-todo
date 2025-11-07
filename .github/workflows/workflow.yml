@@ -15,8 +15,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Instal dependencies
-        run: npm Instal
+      - name: Install dependencies
+        run: npm install
 
       - name: Build website
         run: npm run build
