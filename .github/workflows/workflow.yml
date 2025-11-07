@@ -49,7 +49,7 @@ jobs:
           ls -a ..
 
       - name: Run TestCafe E2E Tests
-        run: testcafe "chromium:headless src/tests/todo-tests.js
+        run: testcafe chromium:headless src/tests/todo-tests.js
 
       - name: Store artifacts
         uses: actions/upload-artifact@v4
