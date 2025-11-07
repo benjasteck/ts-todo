@@ -39,6 +39,15 @@ jobs:
       - name: Install Chromium
         run: apt-get install -y chromium
 
+      - name: Debug Current Directory
+        run: |
+          echo "--- PWD ---"
+          pwd
+          echo "--- Files in PWD (project root) ---"
+          ls -a
+          echo "--- Files UP ONE directory (parent) ---"
+          ls -a ..
+
       - name: Run tests
         run: testcafe chromium:headless src/tests/**/*.ts
 
